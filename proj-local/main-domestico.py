@@ -33,6 +33,38 @@ def df_csv_custo(file_in):
 
     return df
 
+def df_csv_recebido(file_in):
+
+    #--> return df
+    df = GenerateDF().csv_generate_df_recebido('csv/domestico/'+file_in)
+    #df = GenerateDF().pandas_teste()
+
+    return df
+
+def df_txt_csv(file_in):
+
+    #--> return df
+    df = GenerateDF().txt_convert_csv('csv/domestico/novo_txt/'+file_in)
+    #df = GenerateDF().csv_generate_df_custo('csv/domestico/'+file_in)
+    return df
+
+def movimenta_file(base):
+
+    #--> definir arquivo que sera gerado no storage para depois converter em tabela
+    file_in = base+".csv"
+    #--> upload do arquivo no storage - parametros: nome do bucket, diretorio local do arquivo, diretorio do bucket, arquivo
+    MovimentacaoFileBucket().upload_blob('proj-domestico-file', 'csv/domestico/', 'extrator/', file_in)
+
+def insert(base):
+    #--> definir arquivo que sera gerado no storage para depois converter em tabela
+    file_in = base+".csv"
+    #--> nome da tabela que sera gerada no biquery
+    dataset = 'dev_domestico'
+    tabela_bq = base
+    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
+    InsertBq().insert_tabela( dataset, tabela_bq, 'proj-domestico-file/', 'extrator/', file_in)
+
+
 def execute_qery(queri):
 
     #--> upload do arquivo no storage - parametros: nome do bucket, diretorio local do arquivo, diretorio do bucket, arquivo
@@ -42,27 +74,7 @@ def execute_qery(queri):
     queri_comparativo = MovimentacaoFileBucket().pull_file('proj-domestico-file', 'sql/', queri)
 
     #--> executar query
-    ret_comparativo = InsertBq.create_job(queri_comparativo)
-
-def convert(base):
-
-    #--> definir arquivo que sera gerado no storage para depois converter em tabela
-    file_in = base+".csv"
-    #--> upload do arquivo no storage - parametros: nome do bucket, diretorio local do arquivo, diretorio do bucket, arquivo
-    MovimentacaoFileBucket().upload_blob('proj-domestico-file', 'csv/domestico/', 'extrator/', file_in)
-    #--> nome da tabela que sera gerada no biquery
-    dataset = 'dev_domestico'
-    tabela_bq = base
-    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
-    InsertBq().insert_tabela( dataset, tabela_bq, 'proj-domestico-file/', 'extrator/', file_in)
-
-    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
-    q_comparativo = "custo_comparativo.sql"
-    execute_qery(q_comparativo)
-
-    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
-    q_consolidado = "custo_consolidado.sql"
-    execute_qery(q_consolidado)
+    ret_comparativo = InsertBq().create_job(queri_comparativo)
 
 def convert_depara_info(base):
 
@@ -96,4 +108,43 @@ def convert_custo(base):
     #q_comparativo = "custo_comparativo.sql"
     #execute_qery(q_comparativo)
 
-convert_custo('custo_2020')
+def convert_recebido(base):
+
+    #--> definir arquivo que sera gerado no storage para depois converter em tabela
+    file_in = base+".csv"
+
+    gen_df = df_csv_recebido(file_in)
+
+    dataset = 'dev_domestico'
+    tabela_bq = base
+    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
+    InsertBq().insert_df_recebido(gen_df, dataset, base)
+
+    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
+    #q_comparativo = "custo_comparativo.sql"
+    #execute_qery(q_comparativo)
+
+def execute():
+    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
+    #q_comparativo = "custo_comparativo.sql"
+    #execute_qery(q_comparativo)
+
+    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
+    q_consolidado = "custo_consolidado.sql"
+    execute_qery(q_consolidado)
+
+    #q_recebido_previsao = "recebido_previsao.sql"
+    #execute_qery(q_recebido_previsao)
+
+#->movimento arquivo para bucket
+#movimenta_file('recebido_2021')
+
+#->gerar df e grava na tabela bq
+#convert_custo('custo_2021')
+
+#convert_recebido('recebido_2021')
+
+#->executa query dos dash atualizando com os dados novos
+execute()
+
+#df_txt_csv('custo_2021_07.txt')

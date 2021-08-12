@@ -1,4 +1,5 @@
 create or replace table devsamelo2.dev_domestico.custo_consolidado as (
+with hist as(
 select *,
 extract(year from data_base_bq) ano_base,
 extract(month from data_base_bq) mes_base_ordem,
@@ -84,4 +85,20 @@ dt_custo_bq,
 valor_custo,
 from devsamelo2.dev_domestico.custo_2021
 )
+
+)
+
+select * , 'consolidado' as source from hist
+union all
+SELECT data_base_bq
+       , custo
+       , tipo_custo
+       , dt_custo_bq
+       , valor_custo
+       , ano_base
+       , mes_base_ordem
+       , mes_base
+       , 'previsão' as source 
+FROM `devsamelo2.dev_domestico.custo_forms_2021`
+where pendente = 'Sim'
 )
