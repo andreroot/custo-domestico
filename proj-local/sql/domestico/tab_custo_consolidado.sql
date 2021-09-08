@@ -1,5 +1,21 @@
 create or replace table devsamelo2.dev_domestico.custo_consolidado as (
-with hist as(
+with custo_2021 as 
+    (select tipo_custo
+        ,	custo
+        ,	valor_custo
+        ,	dt_mes_base
+        ,	dt_custo   
+      from (
+    select tipo_custo
+        ,	custo
+        ,	valor_custo
+        ,	dt_mes_base
+        ,	dt_custo
+        , row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    from `devsamelo2.dev_domestico.custo_2021_excel`) 
+    where ordem = 1)
+
+,hist as(
 select *,
 extract(year from data_base_bq) ano_base,
 extract(month from data_base_bq) mes_base_ordem,
@@ -77,13 +93,13 @@ valor_custo,
 from devsamelo2.dev_domestico.custo_2020
 union all 
 select 
-dt_pagto_bq data_base_bq,
+dt_mes_base data_base_bq,
 
 custo,
 tipo_custo,
-dt_custo_bq,
+dt_custo dt_custo_bq,
 valor_custo,
-from devsamelo2.dev_domestico.custo_2021
+from custo_2021
 )
 
 )

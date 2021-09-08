@@ -41,29 +41,6 @@ def df_csv_recebido(file_in):
 
     return df
 
-def df_txt_custo(file_in):
-
-    #--> return df
-    df = GenerateDF().txt_generate_df_custo('csv/domestico/novo_txt/'+file_in)
-
-    #df = GenerateDF().csv_generate_df_custo('csv/domestico/'+file_in)
-    return df
-
-def df_txt_recebido(file_in):
-
-    #--> return df
-    df = GenerateDF().txt_generate_df_recebido('csv/domestico/novo_txt/'+file_in)
-    
-    #df = GenerateDF().csv_generate_df_custo('csv/domestico/'+file_in)
-    return df
-
-def df_txt_saldo(file_in):
-
-    #--> return df
-    df = GenerateDF().txt_generate_df_saldo('csv/domestico/novo_txt/'+file_in)
-    
-    #df = GenerateDF().csv_generate_df_custo('csv/domestico/'+file_in)
-    return df
 
 def movimenta_file(base):
 
@@ -141,73 +118,6 @@ def convert_recebido(base):
     #q_comparativo = "custo_comparativo.sql"
     #execute_qery(q_comparativo)
 
-def convert_txt_custo(base):
-
-    #--> definir arquivo que sera gerado no storage para depois converter em tabela
-    file_in = base+".txt"
-
-    gen_df = df_txt_custo(file_in)
-
-    dataset = 'dev_domestico'
-    tabela_bq = base
-    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
-    InsertBq().insert_df_custo(gen_df, dataset, "custo_2021_txt")
-
-    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
-    #q_comparativo = "custo_comparativo.sql"
-    #execute_qery(q_comparativo)
-
-
-def convert_txt_custo(base):
-
-    #--> definir arquivo que sera gerado no storage para depois converter em tabela
-    file_in = base+".txt"
-
-    gen_df = df_txt_custo(file_in)
-
-    dataset = 'dev_domestico'
-    tabela_bq = base
-    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
-    InsertBq().insert_df_custo(gen_df, dataset, "custo_2021_txt")
-
-    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
-    #q_comparativo = "custo_comparativo.sql"
-    #execute_qery(q_comparativo)
-    
-def convert_txt_recebido(base):
-
-    #--> definir arquivo que sera gerado no storage para depois converter em tabela
-    file_in = base+".txt"
-
-    gen_df = df_txt_recebido(file_in)
-
-    dataset = 'dev_domestico'
-    tabela_bq = base
-    
-    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
-    InsertBq().insert_df_recebido(gen_df, dataset, "recebido_2021_txt")
-
-    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
-    #q_comparativo = "custo_comparativo.sql"
-    #execute_qery(q_comparativo)
-
-
-def convert_txt_saldo(base):
-
-    #--> definir arquivo que sera gerado no storage para depois converter em tabela
-    file_in = base+".txt"
-
-    gen_df = df_txt_saldo(file_in)
-
-    dataset = 'dev_domestico'
-    tabela_bq = base
-    
-    #--> gerar tabela no Bigquery baseado no arquivo do storage - parametros: dataset, tabela, arquivo
-    InsertBq().insert_df_saldo(gen_df, dataset, "saldo_2021_txt")
-
-    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
-    #q_comparativo = "custo_comparativo.sql"
-    #execute_qery(q_comparativo)
 
 def execute():
     #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
@@ -231,10 +141,3 @@ def execute():
 
 #->executa query dos dash atualizando com os dados novos
 #execute()
-
-for i in range(1,9):
-    print(f'custo_2021_0{i}')
-    file = f'custo_2021_0{i}'
-    #convert_txt_custo(file)
-    convert_txt_recebido(file)
-    #convert_txt_saldo(file)

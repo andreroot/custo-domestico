@@ -1,16 +1,30 @@
 create or replace table devsamelo2.dev_domestico.custo_comparativo as (
-with ano_atual as(
+with custo_2021 as 
+    (select tipo_custo
+        ,	custo
+        ,	valor_custo
+        ,	dt_mes_base
+        ,	dt_custo   
+      from (
+    select tipo_custo
+        ,	custo
+        ,	valor_custo
+        ,	dt_mes_base
+        ,	dt_custo
+        , row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    from `devsamelo2.dev_domestico.custo_2021_excel`) 
+    where ordem = 1)
+
+, ano_atual as(
 
     select 
-        dt_pagto_bq data_base_bq,
-        extract(month from dt_pagto_bq) mes_base_ordem,
+        dt_mes_base data_base_bq,
+        extract(month from dt_mes_base) mes_base_ordem,
         tipo_custo descricao,
         --lan__amento lancamento,
         sum(valor_custo) valor_2021,
-
-
-    from devsamelo2.dev_domestico.custo_2021 atl
-    group by dt_pagto_bq, mes_base_ordem, tipo_custo--, lan__amento
+    from custo_2021 atl
+    group by dt_mes_base, mes_base_ordem, tipo_custo--, lan__amento
 
     
 )

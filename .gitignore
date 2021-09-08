@@ -19,3 +19,4 @@ bin-release/
 ENV/
 key.json
 key_sheet.json
+proj-local/csv/

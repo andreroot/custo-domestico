@@ -1,4 +1,4 @@
-dt_custo_bq,custo,valor_custo
+dt_extrato_bq,descricao,valor_ext
 01/07/2021,ELECTRONKAMIA,"-3,00"
 01/07/2021,ELECTRONPAG*Marcelo,"-5,00"
 01/07/2021,ELECTRONPAG*NelsonD,"-16,00"

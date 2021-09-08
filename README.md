@@ -65,3 +65,5 @@ cofigurar: https://cloud.google.com/bigquery/external-data-drive#enable-google-d
 
         # Construct a BigQuery client object.
         client = bigquery.Client(credentials=credentials, project='devsamelo2')
+
+

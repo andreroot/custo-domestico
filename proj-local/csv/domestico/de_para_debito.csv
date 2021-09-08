@@ -67,7 +67,7 @@
 "ELECTRONGRAO ESPRES";"alimentação";
 "INT PAG TIT 109000333418";"boleto";
 "ELECTRONSHOKITI";"compras";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TEC DEPOSITO DINHEIRO";"deposito";
 "TED 237.2846ANDRE N BARB";"salario";
 "TED 237.2846ANDRE N BARB";"salario";
@@ -195,7 +195,7 @@
 "ELECTRONSHOKITI";"compras";
 "INT  PAG TIT BANCO 237";"boleto";
 "ELECTRONANTHONNY CA";"compras";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TED 237.2846ANDRE N BARB";"salario";
 "APL APLIC AUT MAIS";"saldo";
 "SALDO APLIC AUT MAIS";"saldo";
@@ -296,7 +296,7 @@
 "RSHOP-SHOKITI    -13/03";"compras";
 "INT DPVAT-SP HOH-6396";"dpvat";
 "INT IPVA-SP HOH-6396";"ipva";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"resgate";
 "TED 237.2846ANDRE N BARB";"salario";
 "APL APLIC AUT MAIS";"saldo";
@@ -412,7 +412,7 @@
 "RSHOP-PAG*FarmaEF-15/04";"farmacia";
 "RSHOP-PAG*FarmaEF-15/04";"farmacia";
 "TBI 2948.08717-2     C/C";"deposito";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"resgate";
 "TED 237.2846ANDRE N BARB";"salario";
 "APL APLIC AUT MAIS";"saldo";
@@ -526,7 +526,7 @@
 "SALDO ANTERIOR";"saldo";
 "ELECTRONHABIBS";"alimentação";
 "ELECTRONS KOMESU MA";"compras";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TED 237.2846ANDRE N BARB";"salario";
 "APL APLIC AUT MAIS";"saldo";
 "SALDO APLIC AUT MAIS";"saldo";
@@ -645,7 +645,7 @@
 "ELECTRONRUMO LESTE";"compras";
 "ELECTRONSONDA TREME";"mercado";
 "ELECTRONSTELO S A *";"compras";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"resgate";
 "TED 237.2846ANDRE N BARB";"salario";
 "SDO CTA/APL AUTOMATICAS";"saldo";
@@ -753,7 +753,7 @@
 "ELECTRONSONDA JACAN";"mercado";
 "SALDO DO DIA";"saldo";
 "ELECTRONBD";"compras";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 0747.56106-6";"emprestimo";
 "TED 237.2846ANDRE N BARB";"salario";
 "SDO CTA/APL AUTOMATICAS";"saldo";
@@ -862,7 +862,7 @@
 "ELECTRONMEU CHAPA B";"alimentação";
 "ELECTRONPAG*Frigott";"frango";
 "ELECTRONSONDA JACAN";"mercado";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TED 237.2846ANDRE N BARB";"salario";
 "SDO CTA/APL AUTOMATICAS";"saldo";
 "SDO CTA/APL AUTOMATICAS";"saldo";
@@ -956,7 +956,7 @@
 "ELECTRONCENTRO AUTO";"mercado";
 "ELECTRONMG COMERCIO";"mercado";
 "ELECTRONPROMO FARMA";"farmacia";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TED 237.2846ANDRE N BARB";"salario";
 "SDO CTA/APL AUTOMATICAS";"saldo";
 "ELECTRONSONDA TREME";"mercado";
@@ -1068,7 +1068,7 @@
 "TED 237.2846ANDRE N BARB";"salario";
 "SDO CTA/APL AUTOMATICAS";"saldo";
 "ELECTRONAUTO POSTO";"gasolina";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"resgate";
 "SDO CTA/APL AUTOMATICAS";"saldo";
 "ELECTRONDROGARIA PR";"farmacia";
@@ -1169,7 +1169,7 @@
 "ELECTRONPASTEIS NIS";"alimentação";
 "ELECTRONRAIA 47";"farmacia";
 "ELECTRONTRIMAIS SUP";"mercado";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TED 237.2846ANDRE N BARB";"salario";
 "SDO CTA/APL AUTOMATICAS";"saldo";
 "ELECTRONTRIMAIS SUP";"mercado";
@@ -1295,7 +1295,7 @@
 "ELECTRONTRIMAIS SUP";"mercado";
 "ELECTRONTRIMAIS SUP";"mercado";
 "ELECTRONTRIMAIS SUP";"mercado";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"retirada";
 "PIX QRS CLAUDIO DOU13/02";"tapete";
 "PIX TRANSF  ANDRE N15/02";"salario";
@@ -1377,7 +1377,7 @@
 "ELECTRONTRIMAIS SUP";"mercado";
 "ELECTRONTRIMAIS SUP";"mercado";
 "ELECTRONYINGXUE MA";"mercado";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"resgate";
 "SALDO DO DIA";"saldo";
 "ELECTRONTRIMAIS SUP";"mercado";
@@ -1486,7 +1486,7 @@
 "ELECTRONTRIMAIS SUP";"mercado";
 "ELECTRONTRIMAIS SUP";"mercado";
 "ELECTRONTRIMAIS SUP";"mercado";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
 "TBI 9293.22915-0/500";"retirada";
 "PIX QRS CLAUDIO DOU13/02";"tapete";
 "PIX TRANSF  ANDRE N15/02";"salario";
@@ -1603,4 +1603,4 @@
 "PIX TRANSF  ANDRE N15/04";"compras";
 "SDO CTA/APL AUTOMATICAS";"saldo";
 "ELECTRONTRIMAIS II";"mercado";
-"INT ITAUCARD";"cartão de credito";
+"INT ITAUCARD";"cartão credito";
