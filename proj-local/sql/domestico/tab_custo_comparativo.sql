@@ -11,7 +11,7 @@ with custo_2021 as
         ,	valor_custo
         ,	dt_mes_base
         ,	dt_custo
-        , row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+        , row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`) 
     where ordem = 1)
 

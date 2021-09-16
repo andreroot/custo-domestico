@@ -19,7 +19,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -70,7 +70,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -106,7 +106,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -142,7 +142,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -178,7 +178,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -213,7 +213,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -249,7 +249,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -284,7 +284,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -319,7 +319,7 @@ left join (
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
 
@@ -350,14 +350,20 @@ from
 
 ) rec
 left join (
-
+/**alterar query para clacular previsão do mes seguinte
     select dt_mes_base, sum(valor_custo)  valor_custo ,
     from (
     select tipo_custo,	custo,	valor_custo,	dt_mes_base,	dt_custo,
-    row_number() over (partition by tipo_custo,	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    row_number() over (partition by 	custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
     from `devsamelo2.dev_domestico.custo_2021_excel`
     ) where ordem = 1
-
+**/
+    select  dt_mes_base, sum(valor_custo)  valor_custo ,
+    from (
+    select tipo_custo,	custo,	valor_custo,	dt_mes_base, dt_custo_bq,
+    --row_number() over (partition by 	custo,	cast(valor_custo as string),	data_base_bq, dt_custo_bq order by process_time desc) ordem
+    from `devsamelo2.dev_domestico.custo_consolidado`
+    ) --where ordem = 1
     group by dt_mes_base
 
 ) cst on rec.dt_mes_base = cst.dt_mes_base

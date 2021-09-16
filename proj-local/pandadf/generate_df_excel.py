@@ -167,9 +167,16 @@ class GenerateDF():
                 var_tp = 'doação'
                 df_extrato.at[idx,"tipo_custo"] = var_tp 
 
-            elif ((row_cc["descricao"].find('DA  NEXTEL TELECOM') < 0)  and 
-                    (row_cc["descricao"].find('INT PAG TIT') < 0)       and 
-                    (row_cc["descricao"].find('TAR PACOTE ITAU') < 0)):
+            elif row_cc["descricao"].find('LIS/JUROS')>=0:
+                print("primeira verificação de de-para custo => banco")
+                var_tp = 'banco'
+                df_extrato.at[idx,"tipo_custo"] = var_tp 
+
+            else:
+                print("Não encontrado")
+                var_tp = "compras"
+
+            if var_tp=="compras":
 
                 print("segunda verificação de de-para custo")
                 tipo_custo = df_custo_de_para.where(df_custo_de_para['de_para'] == row_cc["descricao"])
@@ -190,8 +197,6 @@ class GenerateDF():
                             df_extrato.at[idx,"tipo_custo"] = "compras"
                 else:
                     df_extrato.at[idx,"tipo_custo"] = "compras"
-            else:
-                df_extrato.at[idx,"tipo_custo"] = "compras"
         
         return df_extrato
 

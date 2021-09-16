@@ -1,5 +1,6 @@
 create or replace table devsamelo2.dev_domestico.credito_mes as 
     select tipo_custo_credito
+    , custo_credito
     , dt_mes_base
     , dt_credito
     ,     extract(year from dt_mes_base) ano_base
@@ -20,11 +21,11 @@ create or replace table devsamelo2.dev_domestico.credito_mes as
     , sum(valor_credito) valor_credito
 
     from (
-    select tipo_custo_credito, dt_credito , dt_mes_base,valor_credito,
+    select tipo_custo_credito,custo_credito, dt_credito , dt_mes_base,valor_credito,
     row_number() over (partition by custo_credito,	dt_credito	, cast(valor_credito as string),	dt_mes_base order by process_time desc) ordem
      from `devsamelo2.dev_domestico.credito_2021_excel`
    -- where dt_mes_base = '2021-10-01'
     ) where ordem = 1
 
-   group by tipo_custo_credito, dt_credito, dt_mes_base
+   group by tipo_custo_credito, custo_credito, dt_credito, dt_mes_base
     order by  dt_mes_base--,dt_credito

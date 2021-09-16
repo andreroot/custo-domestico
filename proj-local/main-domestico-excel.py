@@ -138,7 +138,11 @@ def execute():
 
     #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
     q_saldo = "tab_saldo_gerado_mes_base.sql"
-    execute_qery(q_saldo)    
+    execute_qery(q_saldo)   
+
+    #--> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
+    q_credito = "tab_credito.sql"
+    execute_qery(q_credito)    
 
 def gerar_credito():
     for i in range(8,13):
@@ -164,9 +168,18 @@ def gerar_debito():
         convert_excel_recebido(file+'.xls')
         convert_excel_saldo(file+'.xls')    
 
+
+'''
 file='custo_2021_09'
-#convert_excel_custo(file+'.xls')
-#convert_excel_recebido(file+'.xls')
-#convert_excel_saldo(file+'.xls')  
-#gerar_credito()
+convert_excel_custo(file+'.xls')
+convert_excel_recebido(file+'.xls')
+convert_excel_saldo(file+'.xls')  
+gerar_credito()
 execute()
+
+q_credito = "tab_credito.sql"
+execute_qery(q_credito)  
+'''
+
+execute()
+  
