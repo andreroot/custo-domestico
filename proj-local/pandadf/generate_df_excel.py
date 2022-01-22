@@ -1,6 +1,7 @@
 import pandas as pd
 from bucket.mov_file_bucket import MovimentacaoFileBucket
 from drive.sheet import DriveSheet
+from analisedf.analise_df import AnaliseDataFrame
 import numpy as np
 import datetime as dt
 import warnings
@@ -142,12 +143,17 @@ class GenerateDF():
                 var_tp = 'banco'
                 df_extrato.at[idx,"tipo_custo"] = var_tp
 
+            elif row_cc["descricao"].find('IMW R')>=0:
+                print("primeira verificação de de-para custo => seminario")
+                var_tp = 'seminario'
+                df_extrato.at[idx,"tipo_custo"] = var_tp 
+
             elif row_cc["descricao"].find('INT PAG TIT')>=0:
                 print("primeira verificação de de-para custo => boleto")
                 var_tp = 'boleto'
                 df_extrato.at[idx,"tipo_custo"] = var_tp 
 
-            elif row_cc["descricao"].find('DA  NEXTEL TELECOM')>=0:
+            elif row_cc["descricao"].find('NEXTEL')>=0:
                 print("primeira verificação de de-para custo => celular")
                 var_tp = 'celular'
                 df_extrato.at[idx,"tipo_custo"] = var_tp    
@@ -170,6 +176,11 @@ class GenerateDF():
             elif row_cc["descricao"].find('LIS/JUROS')>=0:
                 print("primeira verificação de de-para custo => banco")
                 var_tp = 'banco'
+                df_extrato.at[idx,"tipo_custo"] = var_tp 
+
+            elif row_cc["descricao"].find('NEXTEL')>=0:
+                print("primeira verificação de de-para custo => banco")
+                var_tp = 'celular'
                 df_extrato.at[idx,"tipo_custo"] = var_tp 
 
             else:
@@ -286,8 +297,8 @@ class GenerateDF():
     def excel_generate_df_credito(self, excel_file):
 
         print("GenerateDF - faura de credito: gerar dataframe baseado no excel:",excel_file)
-        df_extrato = pd.read_excel(excel_file, sheet_name='Lançamentos', usecols = "A,B,D,E", skiprows=1) 
-        df_extrato.columns = ["dt_extrato_bq", "descricao", "valor_ext","dt_base"]
+        df_extrato = pd.read_excel(excel_file, sheet_name='Lançamentos', usecols = "A,B,D,E,F", skiprows=1) 
+        df_extrato.columns = ["dt_extrato_bq", "descricao", "valor_ext","dt_base","valor_parc"]
         #print(df_extrato, "\n")
         if len(df_extrato): 
 
@@ -320,6 +331,18 @@ class GenerateDF():
 
             print(df_extrato, "\n")
 
+            print("-> convert colunas de valor parcelado(com separador ',' para '.') no dataframe (str to float)", excel_file, "\n")
+            df_extrato["valor_parc"] = df_extrato["valor_parc"].astype(str)
+
+            df_extrato["valor_parc"] = [x.replace(",", ".") for x in df_extrato["valor_parc"]]
+            
+
+            df_extrato["valor_parc"] = pd.to_numeric(df_extrato["valor_parc"].fillna(0), errors="coerce")
+            df_extrato["valor_parc"] = df_extrato["valor_parc"].map("{:.2f}".format)
+            df_extrato["valor_parc"] = df_extrato["valor_parc"].astype(float)
+
+            print(df_extrato, "\n")            
+
             df_extrato = GenerateDF().aplicar_depara_credito(df_extrato)
 
             #print(df_extrato, "\n")
@@ -328,6 +351,7 @@ class GenerateDF():
 
             df_extrato = df_extrato.rename(columns={'descricao': 'custo_credito'})
             df_extrato = df_extrato.rename(columns={'valor_ext': 'valor_credito'})
+            df_extrato = df_extrato.rename(columns={'valor_parc': 'valor_credito_parc'})
             df_extrato = df_extrato.rename(columns={'dt_base': 'dt_mes_base'})
             df_extrato = df_extrato.rename(columns={'dt_extrato_bq': 'dt_credito'})
 
@@ -338,7 +362,7 @@ class GenerateDF():
             dt_process = dt.datetime.fromtimestamp(dt.datetime.timestamp(now))
 
             df_extrato['process_time'] = dt_process #.strftime("%Y-%m-%d %H:%M:%S.%f %z")
-            df_extrato = df_extrato[["tipo_custo_credito", "custo_credito", "valor_credito", "dt_mes_base", "dt_credito","process_time"]]
+            df_extrato = df_extrato[["tipo_custo_credito", "custo_credito", "valor_credito", "valor_credito_parc", "dt_mes_base", "dt_credito","process_time"]]
 
         else:
             print("GenerateDF: arquivo não gerou dataframe de dados", "\n")
@@ -496,3 +520,96 @@ class GenerateDF():
 
         print(df_extrato, "\n")
         return df_extrato
+
+    def excel_generate_df_listacompras(self, excel_file):
+
+        print("GenerateDF - lista de compras: gerar dataframe baseado no excel:",excel_file)
+        df_lista = pd.read_excel(excel_file, sheet_name='lista', usecols = "A,B,C,D,E,F,G,H,I,J,K") 
+        #ITEM	CODIGO	DESCRICAO	TIPO_UNID	QTD	VL_UNITARIO(R$)	VL_ITEM(R$)	FORMA_PAGAMENTO	VALOR_TOTAL	DATA_COMPRA
+
+        df_lista.columns = ["item","codigo","descricao","tipo_unid","qtd","vl_unitario","vl_item","forma_pagamento","valor_total","data_compra","mercado"]
+        #print(df_extrato, "\n")
+        if len(df_lista): 
+
+            print("-> convert colunas de data(formato YYYY-MM-DD) no dataframe (str to date)", excel_file, "\n")
+
+            df_lista['data_compra'] = pd.to_datetime(df_lista['data_compra'],format='%d/%m/%Y %H:%M:%S')
+            #-> regra para gerar data base do mes, usar "loc" e pegar uma posição dos dados para gerar a data
+            df_lista['ano'] = pd.to_datetime(df_lista['data_compra'].iloc[1]).strftime("%Y")
+            df_lista['mes'] = pd.to_datetime(df_lista['data_compra'].iloc[1]).strftime("%m")
+            df_dt_base = dt.datetime(year=int(df_lista['ano'].iloc[1]),month=int(df_lista['mes'].iloc[1]), day=1)
+
+            df_lista['dt_mes_base'] = df_dt_base 
+
+            print(df_lista, "\n")
+            print(df_lista.dtypes, "\n")
+
+            print("-> convert coluna[vl_unitario] de valor(com separador ',' para '.') no dataframe (str to float)", excel_file, "\n")
+            df_lista["vl_unitario"] = df_lista["vl_unitario"].astype(str)
+
+            df_lista["vl_unitario"] = [x.replace(",", ".") for x in df_lista["vl_unitario"]]
+            
+
+            df_lista["vl_unitario"] = pd.to_numeric(df_lista["vl_unitario"].fillna(0), errors="coerce")
+            df_lista["vl_unitario"] = df_lista["vl_unitario"].map("{:.2f}".format)
+            df_lista["vl_unitario"] = df_lista["vl_unitario"].astype(float)
+
+            print("-> convert coluna[vl_item] de valor(com separador ',' para '.') no dataframe (str to float)", excel_file, "\n")
+            df_lista["vl_item"] = df_lista["vl_item"].astype(str)
+
+            df_lista["vl_item"] = [x.replace(",", ".") for x in df_lista["vl_item"]]
+            
+
+            df_lista["vl_item"] = pd.to_numeric(df_lista["vl_item"].fillna(0), errors="coerce")
+            df_lista["vl_item"] = df_lista["vl_item"].map("{:.2f}".format)
+            df_lista["vl_item"] = df_lista["vl_item"].astype(float)
+
+            print("-> convert coluna[qtd] de valor(com separador ',' para '.') no dataframe (str to float)", excel_file, "\n")
+            df_lista["qtd"] = df_lista["qtd"].astype(str)
+
+            df_lista["qtd"] = [x.replace(",", ".") for x in df_lista["qtd"]]
+            
+
+            df_lista["qtd"] = pd.to_numeric(df_lista["qtd"].fillna(0), errors="coerce")
+            df_lista["qtd"] = df_lista["qtd"].map("{:.2f}".format)
+            df_lista["qtd"] = df_lista["qtd"].astype(float)
+
+            print("-> convert coluna[valor_total] de valor(com separador ',' para '.') no dataframe (str to float)", excel_file, "\n")
+            df_lista["valor_total"] = df_lista["valor_total"].astype(str)
+
+            df_lista["valor_total"] = [x.replace(",", ".") for x in df_lista["valor_total"]]
+            
+
+            df_lista["valor_total"] = pd.to_numeric(df_lista["valor_total"].fillna(0), errors="coerce")
+            df_lista["valor_total"] = df_lista["valor_total"].map("{:.2f}".format)
+            df_lista["valor_total"] = df_lista["valor_total"].astype(float)
+
+            print(df_lista, "\n")
+
+            #print("-> retorna dataframe tratado", "\n")
+
+            #df_extrato = df_extrato.loc[df_extrato['valor_saldo'] >= 0]
+            #df_lista = df_lista[df_lista['descricao'].str.contains(r'SALDO[^\\b]+\w')]
+            
+            #df_extrato["valor_saldo"] = df_extrato["valor_saldo"].abs()
+            #df_extrato = df_extrato.dropna(how='any')
+            print(df_lista, "\n")
+
+            print("-> inserir data_process", "\n")
+            
+            now = dt.datetime.now()
+
+            dt_process = dt.datetime.fromtimestamp(dt.datetime.timestamp(now))
+
+            df_lista['process_time'] = dt_process #.strftime("%Y-%m-%d %H:%M:%S.%f %z")
+
+            df_lista = df_lista[[ "item","codigo","descricao","tipo_unid","qtd","vl_unitario","vl_item","forma_pagamento","valor_total","data_compra","mercado","dt_mes_base","process_time"]]
+
+            print("-> Analise de frequencia de produto", "\n")
+
+            AnaliseDataFrame().estudo_lista_compras(df_lista)
+        else:
+            print("GenerateDF: arquivo não gerou dataframe de dados", "\n")
+
+        print(df_lista, "\n")
+        return df_lista

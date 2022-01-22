@@ -15,6 +15,22 @@ with custo_2021 as
     from `devsamelo2.dev_domestico.custo_2021_excel`) 
     where ordem = 1)
 
+, custo_2022 as 
+    (select tipo_custo
+        ,	custo
+        ,	valor_custo
+        ,	dt_mes_base
+        ,	dt_custo   
+      from (
+    select tipo_custo
+        ,	custo
+        ,	valor_custo
+        ,	dt_mes_base
+        ,	dt_custo
+        , row_number() over (partition by custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
+    from `devsamelo2.dev_domestico.custo_2022_excel`) 
+    where ordem = 1)    
+
 ,hist as(
 select *,
 extract(year from dt_mes_base) ano_base,
@@ -42,7 +58,9 @@ dt_custo_bq,
 valor_custo,
 
 from devsamelo2.dev_domestico.custo_2015
+
 union all 
+
 select 
 dt_pagto_bq dt_mes_base,
 
@@ -52,7 +70,9 @@ dt_custo_bq,
 valor_custo,
 
 from devsamelo2.dev_domestico.custo_2016
+
 union all 
+
 select 
 dt_pagto_bq dt_mes_base,
 
@@ -61,7 +81,9 @@ tipo_custo,
 dt_custo_bq,
 valor_custo,
 from devsamelo2.dev_domestico.custo_2017
+
 union all 
+
 select 
 dt_pagto_bq dt_mes_base,
 
@@ -71,7 +93,9 @@ dt_custo_bq,
 valor_custo,
 
 from devsamelo2.dev_domestico.custo_2018
+
 union all 
+
 select 
 dt_pagto_bq dt_mes_base,
 
@@ -81,7 +105,9 @@ dt_custo_bq,
 valor_custo,
 
 from devsamelo2.dev_domestico.custo_2019
+
 union all 
+
 select 
 dt_pagto_bq dt_mes_base,
 
@@ -91,7 +117,9 @@ dt_custo_bq,
 valor_custo,
 
 from devsamelo2.dev_domestico.custo_2020
+
 union all 
+
 select 
 dt_mes_base dt_mes_base,
 
@@ -100,6 +128,18 @@ tipo_custo,
 dt_custo dt_custo_bq,
 valor_custo,
 from custo_2021
+
+union all 
+
+select 
+dt_mes_base dt_mes_base,
+
+custo,
+tipo_custo,
+dt_custo dt_custo_bq,
+valor_custo,
+from custo_2022
+
 )
 
 )
@@ -115,6 +155,7 @@ SELECT data_base_bq dt_mes_base
        , mes_base_ordem
        , mes_base
        , 'previsão' as source 
-FROM `devsamelo2.dev_domestico.custo_forms_2021`
+FROM `devsamelo2.dev_domestico.custo_forms`
 where pendente = 'Sim'
+  and ano_base = 2022
 )
