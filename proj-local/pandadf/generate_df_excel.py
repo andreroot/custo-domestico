@@ -528,24 +528,29 @@ class GenerateDF():
         #ITEM	CODIGO	DESCRICAO	TIPO_UNID	QTD	VL_UNITARIO(R$)	VL_ITEM(R$)	FORMA_PAGAMENTO	VALOR_TOTAL	DATA_COMPRA
 
         df_lista.columns = ["item","codigo","descricao","tipo_unid","qtd","vl_unitario","vl_item","forma_pagamento","valor_total","data_compra","mercado"]
+
         #print(df_extrato, "\n")
         if len(df_lista): 
 
-            print("-> convert colunas de data(formato YYYY-MM-DD) no dataframe (str to date)", excel_file, "\n")
 
+            #-> regra para gerar data base do mes, usar "loc" e pegar uma posição dos dados para gerar a data        
+            df_lista['mes_ano'] = df_lista['data_compra'].str.extract(r'(\/[0-9]+\/+[0-9]+)')#.strftime("%Y")
+            df_lista['dt_mes_base'] = df_lista['mes_ano'].apply(lambda x: dt.datetime(year=int(x[4:8]),month=int(x[1:3]), day=1) )
+
+            
+            print("-> convert colunas de data(formato YYYY-MM-DD) no dataframe (str to date)", excel_file, "\n")    
             df_lista['data_compra'] = pd.to_datetime(df_lista['data_compra'],format='%d/%m/%Y %H:%M:%S')
-            #-> regra para gerar data base do mes, usar "loc" e pegar uma posição dos dados para gerar a data
-            df_lista['ano'] = pd.to_datetime(df_lista['data_compra'].iloc[1]).strftime("%Y")
-            df_lista['mes'] = pd.to_datetime(df_lista['data_compra'].iloc[1]).strftime("%m")
-            df_dt_base = dt.datetime(year=int(df_lista['ano'].iloc[1]),month=int(df_lista['mes'].iloc[1]), day=1)
+            
 
-            df_lista['dt_mes_base'] = df_dt_base 
+            #df_lista['mes'] = df_lista['mes_ano'].str.extract(r'([0-9]+)')
+            #df_lista['ano'] = df_lista['mes_ano'].str.extract(r'(\d{4}$)')
 
-            print(df_lista, "\n")
+            print(df_lista)
             print(df_lista.dtypes, "\n")
 
             print("-> convert coluna[vl_unitario] de valor(com separador ',' para '.') no dataframe (str to float)", excel_file, "\n")
             df_lista["vl_unitario"] = df_lista["vl_unitario"].astype(str)
+            #df_lista["vl_unitario"] = df_lista["vl_unitario"].apply(lambda x: str(x).replace(",", "."))
 
             df_lista["vl_unitario"] = [x.replace(",", ".") for x in df_lista["vl_unitario"]]
             

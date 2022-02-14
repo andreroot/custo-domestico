@@ -6,6 +6,7 @@ primeira_compra_all as (
 
 select codigo
 , descricao
+, dt_mes_base
 ,  date(data_compra)  data_compra   
 , vl_unitario              
 , row_number() over ( partition by codigo  order by data_compra asc) total_compras
@@ -22,10 +23,11 @@ select codigo
 
 select codigo
 , descricao
+, dt_mes_base
 , vl_unitario
-, prim_data_compra_geral
-, data_compra as segunda_data_compra
-, date_diff(data_compra, prim_data_compra_geral, day) periodo_primeira_compra
+, prim_data_compra_item
+, data_compra as segunda_data_compra_item
+, date_diff(data_compra, prim_data_compra_item, day) periodo_primeira_compra_item
 
 --, cast(100/cast((total_compra_geral / date_diff(ultim_data_compra_geral, prim_data_compra_geral, day))*100 as int) as int) freq_dias_mercado
 
@@ -70,7 +72,7 @@ select *
 
 , (select min(date( data_compra) ) 
     from primeira_compra_all a
-    where a.codigo = one.codigo and a.total_compras = 1) as prim_data_compra_geral
+    where a.codigo = one.codigo and a.total_compras = 1) as prim_data_compra_item
 
 , (select count(distinct data_compra)
    from devsamelo2.dev_domestico.lista_compras

@@ -15,7 +15,8 @@ DECLARE DEZ_2021 DATE DEFAULT '2021-12-01';
 
 DECLARE JAN_2022 DATE DEFAULT '2022-01-01';
 DECLARE FEV_2022 DATE DEFAULT '2022-02-01';
-
+DECLARE MAR_2022 DATE DEFAULT '2022-03-01';
+DECLARE ABR_2022 DATE DEFAULT '2022-04-01';
 
 
 create  temp table receb as
@@ -38,6 +39,13 @@ create  temp table receb as
             valor_recebido,
             row_number() over (partition by descricao,	dt_recebido	, cast(valor_recebido as string),	dt_mes_base order by process_time desc) ordem
      from `devsamelo2.dev_domestico.recebido_2022_excel`
+   union all 
+    select descricao
+        , dt_recebido 
+        , dt_mes_base
+        , valor_recebido
+        , 1 ordem_recebimento
+from     `devsamelo2.dev_domestico.recebido_forms`
     ) 
     where ordem = 1
     group by dt_mes_base;
@@ -64,7 +72,18 @@ union all
                 dt_mes_base,	
                 dt_custo,
                 row_number() over (partition by custo,	cast(valor_custo as string),	dt_mes_base,	dt_custo order by process_time desc) ordem
-            from `devsamelo2.dev_domestico.custo_2022_excel`            
+            from `devsamelo2.dev_domestico.custo_2022_excel`  
+   union all 
+SELECT tipo_custo
+       , custo
+
+       , valor_custo
+       , data_base_bq dt_mes_base
+       , dt_custo_bq dt_custo
+      , 1 ordem       
+FROM `devsamelo2.dev_domestico.custo_forms`
+where pendente = 'Sim'
+  and ano_base = 2022                     
     ) 
     where ordem = 1
     group by dt_mes_base;
@@ -412,7 +431,7 @@ select rec.dt_mes_base,
         rec.valor_recebido, 
         rec.valor_custo, 
         saldo saldo_inicial, 
-        rec.valor_recebido-rec.valor_custo + if(saldo is null, 0, saldo)-2 saldo, 
+        rec.valor_recebido-rec.valor_custo + if(saldo is null, 0, saldo) saldo, 
         FEV_2022 dt_mes_base_saldo 
     from ( 
     select rec.dt_mes_base,
@@ -428,6 +447,54 @@ left join saldo sald
   on (rec.dt_mes_base = sald.dt_mes_base 
      and sald.dt_mes_base = JAN_2022 )
 where  rec.dt_mes_base = JAN_2022
+order by rec.dt_mes_base
+)
+
+, fev_2022 as (
+select rec.dt_mes_base,
+        rec.valor_recebido, 
+        rec.valor_custo, 
+        saldo saldo_inicial, 
+        rec.valor_recebido-rec.valor_custo + if(saldo is null, 0, saldo) saldo, 
+        MAR_2022 dt_mes_base_saldo 
+    from ( 
+    select rec.dt_mes_base,
+           rec.valor_recebido,
+           cst.valor_custo
+      from receb rec
+      left join custo_base cst 
+        on (rec.dt_mes_base = cst.dt_mes_base 
+           and rec.dt_mes_base = FEV_2022 )
+     where  rec.dt_mes_base = FEV_2022
+    ) rec
+left join jan_2022 sald  
+  on (rec.dt_mes_base = sald.dt_mes_base 
+     and sald.dt_mes_base = FEV_2022 )
+where  rec.dt_mes_base = FEV_2022
+order by rec.dt_mes_base
+)
+
+, mar_2022 as (
+select rec.dt_mes_base,
+        rec.valor_recebido, 
+        rec.valor_custo, 
+        saldo saldo_inicial, 
+        rec.valor_recebido-rec.valor_custo + if(saldo is null, 0, saldo) saldo, 
+        FEV_2022 dt_mes_base_saldo 
+    from ( 
+    select rec.dt_mes_base,
+           rec.valor_recebido,
+           cst.valor_custo
+      from receb rec
+      left join custo_base cst 
+        on (rec.dt_mes_base = cst.dt_mes_base 
+           and rec.dt_mes_base = MAR_2022 )
+     where  rec.dt_mes_base = MAR_2022
+    ) rec
+left join fev_2022 sald  
+  on (rec.dt_mes_base = sald.dt_mes_base 
+     and sald.dt_mes_base = MAR_2022 )
+where  rec.dt_mes_base = MAR_2022
 order by rec.dt_mes_base
 )
 
@@ -458,6 +525,10 @@ union all
 select dt_mes_base,	valor_recebido,	valor_custo, saldo from dez_2021
 union all 
 select dt_mes_base,	valor_recebido,	valor_custo, saldo from jan_2022
+union all 
+select dt_mes_base,	valor_recebido,	valor_custo, saldo from fev_2022
+union all 
+select dt_mes_base,	valor_recebido,	valor_custo, saldo from mar_2022
 )
 order by dt_mes_base
 

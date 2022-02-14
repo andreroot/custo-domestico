@@ -159,8 +159,8 @@ class Custo():
         Custo().execute_qery(q_credito)    
 
         #EM CONSTRUÇÃO--> lista de itens de mercado - CRIAR MAIS UMA TABELA QUE CRUZA DADOS PREVISÃO E HISTORICO
-        q_credito = "tab_lista_produtos_mais_consumidos.sql"
-        Custo().execute_qery(q_credito)    
+        q_lista = "tab_lista_produtos_mais_consumidos.sql"
+        Custo().execute_qery(q_lista)    
 
         #EM CONSTRUÇÃO --> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
         q_recebdio = "tab_recebimento_geral_2022.sql"
@@ -169,6 +169,10 @@ class Custo():
         #EM CONSTRUÇÃO --> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
         q_saldo = "tab_saldo_2022.sql"
         Custo().execute_qery(q_saldo)
+
+        #EM CONSTRUÇÃO --> definir arquivo SQL que sera gerado no storage / depois executar no bigquery / gerar tabela
+        q_custo_vida = "tab_custo_vida_geral_2022.sql"
+        Custo().execute_qery(q_custo_vida)        #
 
     def gerar_credito(self, file, ano):
         for i in range(1,13):
@@ -228,11 +232,4 @@ Custo().execute()
 '''
 ExportVar().variavel()
 
-
-file='custo_'
-ano ='2022_'
-Custo().convert_excel_saldo(f'{file}{ano}01.xls', ano)
-
-
-q_saldo = "tab_saldo_2022.sql"
-Custo().execute_qery(q_saldo)
+Custo().execute()
